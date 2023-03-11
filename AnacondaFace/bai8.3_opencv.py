@@ -4,7 +4,7 @@ import os
 import numpy as np
 from datetime import datetime
 
-path = r"C:\Users\MANH\PycharmProjects\AnacondaFace\train"
+path = r"C:\Users\ADMIN\Downloads\PBL5\AnacondaFace\train"
 images = []
 classnames = []
 myList = os.listdir(path)
@@ -31,7 +31,7 @@ print("ma hoa thanh cong")
 print(len(encodeListKnow))
 
 def thamdu(name):
-    with open(r"C:\Users\MANH\PycharmProjects\AnacondaFace\thamdu.csv","a+") as f:
+    with open(r"C:\Users\ADMIN\Downloads\PBL5\AnacondaFace\thamdu.csv","a+") as f:
         myDatalist = f.readlines()
         nameList = []
         timeList = []
@@ -50,7 +50,7 @@ def thamdu(name):
             timeList[indexSearch] = datetime.now().strftime("%H:%M:%S")
             if indexSearch != len(timeList)-1:
                 timeList[indexSearch] += "\n"
-            with open(r"C:\Users\MANH\PycharmProjects\AnacondaFace\thamdu.csv", "w", encoding="utf-8") as f1:
+            with open(r"C:\Users\ADMIN\Downloads\PBL5\AnacondaFace\thamdu.csv", "w", encoding="utf-8") as f1:
                 for name1, time in zip(nameList, timeList):
                     f1.writelines(f"{name1},{time}")
 
@@ -89,7 +89,7 @@ while(True):
         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
         cv2.putText(frame, name, (x2, y2), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2)
 
-    cv2.imshow("Phuc lap trinh", frame)
+    cv2.imshow("Face detection - PBL5", frame)
     if cv2.waitKey(1)==ord("q"): #độ trễ 1/1000s, nếu bấm q sẽ thoát
         break
 cap.release() #giai phong camera
