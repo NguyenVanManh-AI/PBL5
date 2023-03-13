@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-6">
     <router-view></router-view>
   </div>
 </template>
@@ -23,7 +23,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
+.blue {
+    color: #0085FF;
+}
 ::-webkit-scrollbar {
   width: 13px;
 }
@@ -58,12 +61,5 @@ export default {
 #view {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
-}
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
 </style>

@@ -23,6 +23,8 @@ import DisableAutocomplete from 'vue-disable-autocomplete';
 import print from 'vue3-print-nb'
 import Particles from "particles.vue3";
 
+import { fireStoreCore } from './configs/firebase';
+
 const app = createApp(App);
 
 app.use(gAuthPlugin, {
@@ -40,4 +42,5 @@ app.use( Notifications )
 app.use(DisableAutocomplete)
 app.use(print)
 app.use(Particles)
+app.use(fireStoreCore)
 app.mount('#app')

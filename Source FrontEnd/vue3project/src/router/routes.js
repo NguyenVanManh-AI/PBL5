@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import useEventBus from '../composables/useEventBus'
+import useEventBus from '../composables/useEventBus'
 
 // admin 
 import AdminComp from './../components/Admin'
@@ -81,13 +81,24 @@ router.beforeEach((to,from,next)=>{
         next({name:'UserComp'});
     }
 
-    if(to.path.includes('/main')){
-        if(to.path == '/main/account' || to.path == '/main/account/'){
-            next({name:'UserProfile'});
-        }
-    }
+    let user = localStorage.getItem('user');
+    if (!user && to.path.startsWith('/main/') && to.path !== '/main/login') {
+        next({ name: 'UserLogin', replace: true });
+    } 
+    // else {
+    //   next(); không được thêm đoạn này , này phải để cuối , nếu không đoạn sau nó sẽ không check nữa 
+    // }
+        
+    // if(to.path.includes('/main')){
+    //     if(to.path == '/main/account' || to.path == '/main/account/'){
+    //         next({name:'UserProfile'});
+    //     }
+    // }
 
     if(to.path.includes('/admin')){
+        if(to.path == '/admin/') {
+            next({name:'AdminComp'});
+        }
         if(to.path == '/admin/account' || to.path == '/admin/account/'){
             next({name:'AdminProfile'});
         }
