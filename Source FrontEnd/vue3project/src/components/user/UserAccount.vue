@@ -21,8 +21,8 @@ export default {
     },
     computed: {
         isUser() {
-            if(this.$route.path == '/main/account' || this.$route.path == '/main/account/')
-            return true;
+            if(this.$route.path == '/main/account' || this.$route.path == '/main/account/') return true;
+            else return false;
         },
     },
     data(){

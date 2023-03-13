@@ -28,8 +28,8 @@ export default {
     },
     computed: {
         isUser() {
-            if(this.$route.path == '/main' || this.$route.path == '/main/')
-            return true;
+            if(this.$route.path == '/main' || this.$route.path == '/main/') return true;
+            else return false;
         },
     },
     data(){
