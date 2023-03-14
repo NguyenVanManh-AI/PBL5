@@ -1,7 +1,7 @@
 <template>
     <div>
         <button type="button" class="mb-4 btn btn-success rounded" @click="home"><i class="fa-solid fa-house-circle-check"></i></button>
-        <button @click="logout" type="button" class=" float-right ml-3 mb-4 btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+        <button v-if="isAdmin" @click="logout" type="button" class=" float-right ml-3 mb-4 btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
         <div v-if="isAdmin" class="d-flex justify-content-center">
             <div class="d-flex justify-content-center alert alert-success col-6" role="alert" >
                 Dashboard Admin

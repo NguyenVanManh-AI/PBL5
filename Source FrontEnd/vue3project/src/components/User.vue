@@ -1,7 +1,7 @@
 <template>
     <div>
         <button type="button" class="mb-4 btn btn-secondary rounded" @click="home"><i class="fa-solid fa-house-user"></i></button>
-        <button @click="logout" type="button" class=" float-right ml-3 mb-4 btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+        <button v-if="isUser" @click="logout" type="button" class=" float-right ml-3 mb-4 btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
         <!-- <HeaderUser></HeaderUser> -->
         <div v-if="isUser" class="d-flex justify-content-center">
             <div class="d-flex justify-content-center alert alert-primary col-6" role="alert" >
