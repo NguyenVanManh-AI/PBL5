@@ -7,7 +7,7 @@
         <br>
         <hr>
         <br>
-        <div class="col-3">
+        <div class="col-8">
             <FilePicker></FilePicker>
         </div>
         <br>

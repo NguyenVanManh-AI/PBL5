@@ -55,6 +55,7 @@ export default {
                 email:'',
                 phone:'',
                 vector:'',
+                img_url:'',
                 password:'',
                 create_at:'',
                 update_at:'',

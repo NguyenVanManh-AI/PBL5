@@ -24,6 +24,7 @@
                         <th scope="col" ><i class="fa-solid fa-at"></i> Full Name</th>
                         <th scope="col" ><i class="fa-solid fa-phone"></i> Phone</th>
                         <th scope="col" ><i class="fa-solid fa-layer-group"></i> Vector</th>
+                        <th scope="col" ><i class="fa-solid fa-layer-group"></i> Image</th>
                         <th scope="col" ><i class="fa-regular fa-calendar-plus"></i> Create At</th>
                         <th scope="col" ><i class="fa-solid fa-calendar-plus"></i> Update At</th>
                         <!-- <th></th> -->
@@ -38,8 +39,9 @@
                         <td>{{ user.fullname }}</td>
                         <td>{{ user.phone }}</td>
                         <td>{{ user.vector }}</td>
+                        <td>{{ user.url_img }}</td>
                         <td>{{ formatDate(user.create_at.toDate()) }}</td>
-                        <td>{{ formatDate(user.create_at.toDate()) }}</td>
+                        <td>{{ formatDate(user.update_at.toDate()) }}</td>
                         <!-- <td>{{ user.update_time != null ? user.update_time.slice(0, 26) : user.update_time }}</td> -->
                         <!-- <td style=""><button type="button" class="btn btn-outline-primary" @click="editRole(ad.id,ad.role)">Save</button></td> -->
                         <td style=""><button type="button" class="btn btn-outline-danger" @click="openModel(user.id)" data-toggle="modal" data-target="#exampleModalDelete">Delete</button></td>
@@ -211,6 +213,7 @@ export default {
                         phone: "", 
                         vector: "",
                         email: this.user.email,
+                        img_url:'',
                         password: hashedPassword,
                         create_at: createdAt,
                         update_at: createdAt,

@@ -71,6 +71,7 @@ export default {
                                 email:this.user.email,
                                 fullname:user.fullname,
                                 phone:user.phone,
+                                img_url:'',
                                 vector:user.vector,
                                 password:user.password,
                                 create_at:user.create_at,

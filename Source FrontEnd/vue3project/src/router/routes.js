@@ -99,9 +99,14 @@ router.beforeEach((to,from,next)=>{
         if(to.path == '/admin/') {
             next({name:'AdminComp'});
         }
-        if(to.path == '/admin/account' || to.path == '/admin/account/'){
-            next({name:'AdminProfile'});
-        }
+        // if(to.path == '/admin/account' || to.path == '/admin/account/'){
+        //     next({name:'AdminProfile'});
+        // }
+
+        let user = localStorage.getItem('admin');
+        if (!user && to.path.startsWith('/admin') && to.path !== '/admin/login') {
+            next({ name: 'AdminLogin', replace: true });
+        } 
     }
     next();
 }) 

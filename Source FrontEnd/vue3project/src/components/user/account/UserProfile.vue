@@ -64,6 +64,7 @@ export default {
                 fullname:'',
                 email:'',
                 phone:'',
+                img_url:'',
                 vector:'',
                 password:'',
                 create_at:'',

@@ -24,7 +24,11 @@ export default {
 </script>
 
 <style >
-.blue {
+.modal-header .close {
+    padding-right: 40px !important;
+    padding-top: 20px !important;
+}
+.blue,label {
     color: #0085FF;
 }
 ::-webkit-scrollbar {
