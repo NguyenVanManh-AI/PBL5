@@ -34,7 +34,8 @@ export default {
     },
     methods: {
         home(){
-            this.$router.push({name:'AdminComp'});
+            if(!window.localStorage.getItem('admin')) this.$router.push({name:"AdminLogin"});
+            else this.$router.push({name:'AdminComp'});
         },
         logout(){
             window.localStorage.removeItem('admin');

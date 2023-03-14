@@ -40,7 +40,8 @@ export default {
     },
     methods: {
         home(){
-            this.$router.push({name:'UserComp'});
+            if(!window.localStorage.getItem('user')) this.$router.push({name:"UserLogin"});
+            else this.$router.push({name:'UserComp'});
         },
         logout(){
             window.localStorage.removeItem('user');
