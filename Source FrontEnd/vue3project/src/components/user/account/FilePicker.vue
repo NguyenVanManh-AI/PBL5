@@ -89,28 +89,19 @@
         num:0,
 
         /// +++
-        user : {
-          id:null,
+        user:{
+          id:'',
           fullname:'',
-          username:'',
-          email: '',
-          phone: '',
-          google_id:null,
-          date_of_birth:null,
-          url_img:null,
-          gender:null,
-          address:'',
-          status:null,
-          access_token:'',
-          refreshToken:'',
-          created_at:null,
-          updated_at:null,
-          email_verified_at:null,
+          email:'',
+          phone:'',
+          img_url:'',
+          vector:'',
+          password:'',
+          create_at:'',
+          update_at:'',
         },
         url_img:'',
         /// +++
-        data_files:null,
-
       }
     },
     computed: {
@@ -176,6 +167,14 @@
         for (let i = 0; i < files.length; i++) {
           formData.append('files', files[i]);
         }
+        // BaseRequest.post('api/upload-file', formData, { => chú ý như thế này sẽ không được 
+
+        var user = {
+          id: this.user.id,
+          fullname: this.user.fullname
+        }
+        formData.append('user', JSON.stringify(user)); // đây là cách vừa gửi file và vừa gửi thêm thông tin 
+
         BaseRequest.post('api/upload-file/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -185,6 +184,7 @@
           console.log(response.data);
           const { emitEvent } = useEventBus();
           emitEvent('eventSuccess','Upload avatars successfully !');
+          setTimeout(()=>{this.reset();},1000)
         })
         .catch(error => {
           console.log(error);
@@ -383,3 +383,62 @@
     align-content: center;
   } */
 </style>
+
+
+
+
+<!-- 
+  <template>
+    <div>
+      <input multiple type="file" ref="fileInput" @change="uploadFile"/>
+    </div>
+  </template>
+  
+  <script>
+  const axios = require('axios');
+  export default {
+    methods: {
+      // upload 1 file
+      // uploadFile() {
+      //   let formData = new FormData();
+      //   formData.append('files', this.$refs.fileInput.files); 
+  
+      //   axios.post('http://localhost:8000/api/upload-file/', formData, {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data'
+      //     }
+      //   })
+      //   .then(response => {
+      //     console.log(response.data);
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   });
+      // }
+  
+      
+      // upload nhiều file 
+      uploadFile() {
+        let formData = new FormData();
+        let files = this.$refs.fileInput.files;
+  
+        for (let i = 0; i < files.length; i++) {
+          formData.append('files', files[i]);
+        }
+  
+        axios.post('http://localhost:8000/api/upload-file/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }
+    }
+  }
+  </script>
+ -->
