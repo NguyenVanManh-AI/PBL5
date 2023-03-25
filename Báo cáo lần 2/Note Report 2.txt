@@ -1,0 +1,16 @@
+Rasp 
+    - Detect và encode => vector thì thực hiện tại rasp (N+P) 
+        => sau khi có => vector thì gửi về server qua API (M+C)
+    - Tự khởi động : keyword : startup
+
+Server Django 
+    - Nhận Vector từ rasp gửi về => cho ra đó là ai (N+P) 
+        => 1. lưu vào file sqlite (không nên dùng file .csv vì không thực hiện được lệnh truy vấn)
+        => 2. lưu vào firebase 
+    
+Một số vấn đề cần làm rõ : 
+    + Một người : 1 ảnh
+    + Ảnh được lưu tại Django 
+    + Vector đặc trưng trích xuất được từ ảnh tải lên từ Vuejs thì lưu vào file sqltite trong Server Django  
+
+* Làm lại slide 
