@@ -175,7 +175,7 @@
         }
         formData.append('user', JSON.stringify(user)); // đây là cách vừa gửi file và vừa gửi thêm thông tin 
 
-        BaseRequest.post('api/upload-file/', formData, {
+        BaseRequest.post('api/upload-file', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -184,7 +184,10 @@
           console.log(response.data);
           const { emitEvent } = useEventBus();
           emitEvent('eventSuccess','Upload avatars successfully !');
-          setTimeout(()=>{this.reset();},1000)
+          setTimeout(()=>{
+            window.location = window.location.href;
+            this.reset();
+          },1000)
         })
         .catch(error => {
           console.log(error);
