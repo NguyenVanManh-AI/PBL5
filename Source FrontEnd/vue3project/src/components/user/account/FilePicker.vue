@@ -298,7 +298,7 @@
   .upload-card{
     border-radius: 10px;
     padding: 5px 15px;
-    min-height: 150px;
+    min-height: 300px;
     min-width: 150px;
 
     background-color: #ffffff;
