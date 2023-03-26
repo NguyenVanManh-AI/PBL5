@@ -186,8 +186,8 @@
             const { emitEvent } = useEventBus();
             emitEvent('eventSuccess','Upload avatars successfully !');
             setTimeout(()=>{
-              // window.location = window.location.href;
-              // this.reset();
+              window.location = window.location.href;
+              this.reset();
             },1000)
           })
           .catch(error => {
