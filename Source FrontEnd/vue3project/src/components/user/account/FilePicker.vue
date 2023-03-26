@@ -41,7 +41,7 @@
         <!--For now just reset() back to the main menu-->
         <div style="display: flex;">
         <!-- <button class="btn-cancel" v-on:click="reset()">Cancel</button> -->
-        <button class="btn btn-outline-success mr-2" v-on:click="saveReal()">Submit</button>
+        <!-- <button class="btn btn-outline-success mr-2" v-on:click="saveReal()">Submit</button> -->
 
         <!-- Chỉ một ảnh thôi nên không cần , khi up nhiều ảnh thì cancel một lần cho khỏe -->
         <button type="button" class="btn btn-outline-danger" v-on:click="reset()">Cancel</button> <!-- /// +++ -->
@@ -185,10 +185,14 @@
             console.log(response.data);
             const { emitEvent } = useEventBus();
             emitEvent('eventSuccess','Upload avatars successfully !');
-            setTimeout(()=>{
-              window.location = window.location.href;
-              this.reset();
-            },4000)
+
+            // CHÚ Ý là thời gian upload ảnh lên django đã deploy nó sẽ lâu hơn so với ở local 
+            // setTimeout chỉ dùng khi các hoạt động diễn ra nhanh , ta muốn nó chậm lại để xem notification 
+            // còn đây nó chậm sẵn rồi nên không cần đặt nữa 
+            // setTimeout(()=>{
+            window.location = window.location.href;
+            this.reset();
+            // },1000) // thời gian upload cộng thêm thời gian chờ 4s nữa nên nó lâu 
           })
           .catch(error => {
             console.log(error);

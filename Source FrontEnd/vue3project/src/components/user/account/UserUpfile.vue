@@ -10,8 +10,8 @@
         <div class="col-sm-12" >
             <div class="row">
                 <div class="col-12" id="uploadimg">
-                    <div class="newimg col-4"><FilePicker></FilePicker></div>
-                    <div class="preview-box col-8" v-if="images!=null">
+                    <div class="newimg col-6"><FilePicker></FilePicker></div>
+                    <div class="preview-box col-6" v-if="images!=null">
                         <p>Old image</p>
                         <div v-for="(image,index) in images" :key="index" class="img-container"> 
                             <img :src="API_URL + image.image_path" class="preview-img" >
@@ -106,10 +106,11 @@ export default {
                 console.log(data);
                 const { emitEvent } = useEventBus();
                 emitEvent('eventUpfile');
-                setTimeout(()=>{emitEvent('eventResetUpfile');}, 2000);
+                // setTimeout(()=>{emitEvent('eventResetUpfile');}, 2000);
 
-                emitEvent('eventSuccess','Update avatars successfully !');
-                // setTimeout(()=>{window.location=window.location.href;}, 2000);
+                emitEvent('eventSuccess','Update avatars successfully !'); // 1
+                // nguyên nhân là do bất đồng bộ => 1,2 chạy trước cả event eventUpfile nên ảnh không được upload lên 
+                // setTimeout(()=>{window.location=window.location.href;}, 2000); // 2
             }) 
             .catch(error=>{
                 console.log(error);
