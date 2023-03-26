@@ -41,7 +41,7 @@
         <!--For now just reset() back to the main menu-->
         <div style="display: flex;">
         <!-- <button class="btn-cancel" v-on:click="reset()">Cancel</button> -->
-        <button class="btn btn-outline-success mr-2" v-on:click="saveReal()">Submit</button>
+        <!-- <button class="btn btn-outline-success mr-2" v-on:click="saveReal()">Submit</button> -->
 
         <!-- Chỉ một ảnh thôi nên không cần , khi up nhiều ảnh thì cancel một lần cho khỏe -->
         <button type="button" class="btn btn-outline-danger" v-on:click="reset()">Cancel</button> <!-- /// +++ -->
@@ -126,12 +126,12 @@
 
       this.reset();
       const { onEvent } = useEventBus()
-      onEvent('eventUserUpfile',(idCustomer)=>{
-        this.saveReal(idCustomer);
+      onEvent('eventUpfile',()=>{
+        this.saveReal();
       })
 
       // upfile thành công thì reset lại hết 
-      onEvent('eventUserResetUpfile',()=>{
+      onEvent('eventResetUpfile',()=>{
         this.reset();
       })
     },
@@ -175,25 +175,27 @@
         }
         formData.append('user', JSON.stringify(user)); // đây là cách vừa gửi file và vừa gửi thêm thông tin 
 
-        BaseRequest.post('api/upload-file', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        .then(response => {
-          console.log(response.data);
-          const { emitEvent } = useEventBus();
-          emitEvent('eventSuccess','Upload avatars successfully !');
-          setTimeout(()=>{
-            window.location = window.location.href;
-            this.reset();
-          },1000)
-        })
-        .catch(error => {
-          console.log(error);
-          const { emitEvent } = useEventBus();
-          emitEvent('eventError','Upload avatars fail !');
-        });
+        if(this.images.length > 0){
+          BaseRequest.post('api/upload-file', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          .then(response => {
+            console.log(response.data);
+            const { emitEvent } = useEventBus();
+            emitEvent('eventSuccess','Upload avatars successfully !');
+            setTimeout(()=>{
+              window.location = window.location.href;
+              this.reset();
+            },1000)
+          })
+          .catch(error => {
+            console.log(error);
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Upload avatars fail !');
+          });
+        }
       },
       /// +++
 
