@@ -109,7 +109,7 @@ export default {
                 setTimeout(()=>{emitEvent('eventResetUpfile');}, 2000);
 
                 emitEvent('eventSuccess','Update avatars successfully !');
-                setTimeout(()=>{window.location=window.location.href;}, 2000);
+                // setTimeout(()=>{window.location=window.location.href;}, 2000);
             }) 
             .catch(error=>{
                 console.log(error);

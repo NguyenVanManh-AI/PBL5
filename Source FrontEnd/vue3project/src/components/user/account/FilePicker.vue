@@ -188,7 +188,7 @@
             setTimeout(()=>{
               window.location = window.location.href;
               this.reset();
-            },1000)
+            },4000)
           })
           .catch(error => {
             console.log(error);
