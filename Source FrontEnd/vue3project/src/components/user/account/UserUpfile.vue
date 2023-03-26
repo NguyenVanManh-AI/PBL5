@@ -10,7 +10,7 @@
         <div class="col-sm-12" >
             <div class="row">
                 <div class="col-12" id="uploadimg">
-                    <div class="newimg col-6"><FilePicker></FilePicker></div>
+                    <div class="newimg" style="width: 50%;"><FilePicker></FilePicker></div>
                     <div class="preview-box col-6" v-if="images!=null">
                         <p>Old image</p>
                         <div v-for="(image,index) in images" :key="index" class="img-container"> 
