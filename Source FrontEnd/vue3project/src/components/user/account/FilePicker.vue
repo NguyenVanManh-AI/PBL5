@@ -41,7 +41,7 @@
         <!--For now just reset() back to the main menu-->
         <div style="display: flex;">
         <!-- <button class="btn-cancel" v-on:click="reset()">Cancel</button> -->
-        <!-- <button class="btn btn-outline-success mr-2" v-on:click="saveReal()">Submit</button> -->
+        <button class="btn btn-outline-success mr-2" v-on:click="saveReal()">Submit</button>
 
         <!-- Chỉ một ảnh thôi nên không cần , khi up nhiều ảnh thì cancel một lần cho khỏe -->
         <button type="button" class="btn btn-outline-danger" v-on:click="reset()">Cancel</button> <!-- /// +++ -->
@@ -186,8 +186,8 @@
             const { emitEvent } = useEventBus();
             emitEvent('eventSuccess','Upload avatars successfully !');
             setTimeout(()=>{
-              window.location = window.location.href;
-              this.reset();
+              // window.location = window.location.href;
+              // this.reset();
             },1000)
           })
           .catch(error => {
