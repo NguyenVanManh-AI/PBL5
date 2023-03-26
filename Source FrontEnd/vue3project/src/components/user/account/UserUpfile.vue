@@ -10,8 +10,8 @@
         <div class="col-sm-12" >
             <div class="row">
                 <div class="col-12" id="uploadimg">
-                    <div class="newimg" style="width: 50%;"><FilePicker></FilePicker></div>
-                    <div class="preview-box col-6" v-if="images!=null">
+                    <div class="newimg col-4"><FilePicker></FilePicker></div>
+                    <div class="preview-box col-8" v-if="images!=null">
                         <p>Old image</p>
                         <div v-for="(image,index) in images" :key="index" class="img-container"> 
                             <img :src="API_URL + image.image_path" class="preview-img" >

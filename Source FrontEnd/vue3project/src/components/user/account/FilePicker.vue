@@ -305,7 +305,7 @@
     -webkit-box-shadow: 2px 4px 20px 2px #dadada;
     box-shadow: 2px 4px 20px 2px #dadada;
     margin: auto;
-    width: 50%;
+    /* width: 50%; */
   }
   .dropbox *{
     cursor: pointer;
