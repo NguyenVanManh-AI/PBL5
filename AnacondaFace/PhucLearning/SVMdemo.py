@@ -20,7 +20,6 @@ clf = SVC(kernel='linear', C=1)
 
 # Huấn luyện mô hình với tập huấn luyện
 clf.fit(X_train, y_train)
-
 # Dự đoán nhãn của các điểm dữ liệu trong tập kiểm tra
 y_pred = clf.predict(X_test)
 
