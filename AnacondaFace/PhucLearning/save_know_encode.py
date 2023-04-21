@@ -4,7 +4,7 @@ import pandas as pd
 import math
 import cv2
 import numpy as np
-import skimage.feature
+# import skimage.feature
 # from skimage.feature import local_binary_pattern  # # pip install scikit-image
 # ----------------method HoG for extracting feature vector HoG---------------------------
 def hog(image, orientations=8, pixels_per_cell=(8, 8), cells_per_block=(3, 3), visualize=False):

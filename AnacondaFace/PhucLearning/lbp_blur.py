@@ -19,7 +19,10 @@ def main():
 
     # Gaussian blur + LBP
     blur_img = cv2.GaussianBlur(img, ksize=(KERNEL_WIDTH, KERNEL_HEIGHT), sigmaX=SIGMA_X, sigmaY=SIGMA_Y)
-    blur_out = local_binary_pattern(image=blur_img, P=8, R=1, method='default')
+    down_points = (64, 64)
+
+    resize_down = cv2.resize(blur_img, down_points, interpolation=cv2.INTER_LINEAR)
+    blur_out = local_binary_pattern(image=resize_down, P=8, R=1, method='default')
     cv2.imwrite('blur.jpg', blur_img)
     cv2.imwrite('blur_lbp.jpg', blur_out)
     print("Saved image @ blur.jpg")
