@@ -1,61 +1,66 @@
 <template>
     <div>
-        <button type="button" class="mb-4 btn btn-secondary rounded" @click="home"><i class="fa-solid fa-house-user"></i></button>
-        <button v-if="isUser" @click="logout" type="button" class=" float-right ml-3 mb-4 btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-        <!-- <HeaderUser></HeaderUser> -->
-        <div v-if="isUser" class="d-flex justify-content-center">
-            <div class="d-flex justify-content-center alert alert-primary col-6" role="alert" >
-                Dashboard User
+        <SidebarMenuAkahon v-if="user"></SidebarMenuAkahon>
+        <div id="view-user">
+            <div id="view-user-min">
+                <div id="content">
+                    <router-view></router-view>
+                </div>
             </div>
         </div>
-        <div v-if="isUser" class="d-flex justify-content-center">
-            <router-link class="mx-4" :to="{ name: 'UserAccount' }"> <i class="fa-solid fa-circle-user"></i> My Account </router-link>
-            <router-link class="mx-4" :to="{ name: 'UserAttentdance' }"> <i class="fa-solid fa-calendar-check"></i> User Attentdance </router-link>
-        </div>
-        <router-view></router-view>
-        <!-- <FooterUser></FooterUser> -->
     </div>
-</template>
+  </template>
 <script>
 
-// import HeaderUser from './user/HeaderUser';
-// import FooterUser from './user/FooterUser';
+import SidebarMenuAkahon from './user/Sidebar-menu-akahon.vue';
+import useEventBus from './../composables/useEventBus' 
 
 export default {
-    name: "UserComp",
+    name : "UserComp",
     components: {
-        // HeaderUser,
-        // FooterUser
-    },
-    computed: {
-        isUser() {
-            if(this.$route.path == '/main' || this.$route.path == '/main/') return true;
-            else return false;
-        },
+        SidebarMenuAkahon
     },
     data(){
-        return {
-            User:null,
-        } 
-    },
-    methods: {
-        home(){
-            if(!window.localStorage.getItem('user')) this.$router.push({name:"UserLogin"});
-            else this.$router.push({name:'UserComp'});
-        },
-        logout(){
-            window.localStorage.removeItem('user');
-            this.$router.push({name:'UserLogin'}); 
+        return{
+            user:null,
         }
+    },
+    created(){
+
     },
     mounted(){
-        if(!window.localStorage.getItem('user')){
+        this.user = window.localStorage.getItem('user');
+        const { onEvent } = useEventBus()
+        onEvent('eventLogout',()=>{
+            this.admin = null;
             this.$router.push({name:"UserLogin"});
-        }
-    }
+            window.location = window.location.href;
+        })
+    },
+    methods:{
+        
+    },
 }
 </script>
-
-<style>
-
+<style >
+._view-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: white;
+}
+._view-user-min {
+    box-shadow: rgba(99, 127, 152, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    border-radius: 20px;
+    height: 93vh;
+    width: 96%;
+    padding: 16px;
+}
+._content {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
 </style>

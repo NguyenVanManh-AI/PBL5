@@ -1,4 +1,8 @@
 <template>
+    <div class="_view-user">
+        <ParticleVue32></ParticleVue32>
+        <div class="_view-user-min" >
+            <div class="_content">
     <div id="administrator">
         <div>
             <router-link :to="{ name: 'AdminComp' }"> Dashboard Admin </router-link><i class="fa-solid fa-angles-right"></i>
@@ -20,6 +24,9 @@
             </div>
         </div>
         <Notification></Notification>
+    </div>
+    </div>
+    </div>
     </div>
 </template>
 
