@@ -1,53 +1,105 @@
 <template>
     <div>
-        <button type="button" class="mb-4 btn btn-success rounded" @click="home"><i class="fa-solid fa-house-circle-check"></i></button>
-        <button v-if="isAdmin" @click="logout" type="button" class=" float-right ml-3 mb-4 btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-        <div v-if="isAdmin" class="d-flex justify-content-center">
-            <div class="d-flex justify-content-center alert alert-success col-6" role="alert" >
-                Dashboard Admin
+        <SidebarMenuAkahon v-if="admin"></SidebarMenuAkahon>
+        <div id="view-user">
+            <div id="view-user-min">
+                <div id="content">
+                    <router-view></router-view>
+                </div>
             </div>
         </div>
-        <div v-if="isAdmin" class="d-flex justify-content-center">
-            <router-link class="mx-4" :to="{ name: 'AdminManagementUser' }"> <i class="fa-solid fa-users"></i> Management User Account </router-link>
-            <router-link class="mx-4" :to="{ name: 'AdminManagementAdmin' }"> <i class="fa-solid fa-users-gear"></i> Management Admin Account </router-link>
-            <router-link class="mx-4" :to="{ name: 'AdminStatistical' }"> <i class="fa-solid fa-chart-pie"></i> Statistical </router-link>
-            <router-link class="mx-4" :to="{ name: 'AdminAccount' }"> <i class="fa-solid fa-user-shield"></i> My Account </router-link>
-        </div>
-        <router-view></router-view>
     </div>
-</template>
+  </template>
 <script>
 
+import SidebarMenuAkahon from './admin/Sidebar-menu-akahon.vue';
+import useEventBus from './../composables/useEventBus' 
+
 export default {
-    name: "AdminComp",
+    name : "AdminComp",
     components: {
-    },
-    computed: {
-        isAdmin() {
-            return this.$route.path === "/admin";
-        },
+        SidebarMenuAkahon
     },
     data(){
-        return {
+        return{
             admin:null,
-        } 
-    },
-    methods: {
-        home(){
-            if(!window.localStorage.getItem('admin')) this.$router.push({name:"AdminLogin"});
-            else this.$router.push({name:'AdminComp'});
-        },
-        logout(){
-            window.localStorage.removeItem('admin');
-            this.$router.push({name:'AdminLogin'}); 
         }
     },
-    mounted(){
+    created(){
 
-    }
+    },
+    mounted(){
+        this.admin = window.localStorage.getItem('admin');
+        const { onEvent } = useEventBus()
+        onEvent('eventLogout',()=>{
+            this.admin = null;
+            this.$router.push({name:"AdminLogin"});
+            window.location = window.location.href;
+        })
+    },
+    methods:{
+        
+    },
 }
 </script>
+<style >
+.blue, label {
+    color: #F84B2F !important;
+}
 
-<style>
+._view-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: white;
+}
+._view-user-min {
+    box-shadow: rgba(99, 127, 152, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+    border-radius: 20px;
+    height: 93vh;
+    width: 96%;
+    padding: 16px;
+}
+._content {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+
+/* btn Login */
+.btn-pers {
+  position: relative;
+  left: 50%;
+  padding: 1em 2.5em;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  transform: translateX(-50%);
+}
+
+.btn-pers:hover {
+  background-color: #F84B2F !important;
+  /* background-color: #F84B2F; */
+  box-shadow: 0px 15px 20px #ffbea5;
+  color: #fff;
+  transform: translate(-50%, -7px);
+}
+
+.btn-pers:active {
+  transform: translate(-50%, -1px);
+}
+/* btn Login */
 
 </style>

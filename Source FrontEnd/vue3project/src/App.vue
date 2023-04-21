@@ -1,16 +1,17 @@
 <template>
-  <div class="p-6">
+  <div class="">
     <router-view></router-view>
+    <Notification></Notification>
   </div>
 </template>
 
 <script>
 
-
+import Notification from './components/Notification';
 export default {
   name: 'App',
   components:{
-
+    Notification,
   },
   data(){
     return {
@@ -66,4 +67,43 @@ export default {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+
+
+
+
+
+
+/* btn Login */
+.btn-pers {
+  position: relative;
+  left: 50%;
+  padding: 1em 2.5em;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  transform: translateX(-50%);
+}
+
+.btn-pers:hover {
+  background-color: #0085FF;
+  /* background-color: #F84B2F; */
+  box-shadow: 0px 15px 20px #adcdfc;
+  color: #fff;
+  transform: translate(-50%, -7px);
+}
+
+.btn-pers:active {
+  transform: translate(-50%, -1px);
+}
+/* btn Login */
 </style>

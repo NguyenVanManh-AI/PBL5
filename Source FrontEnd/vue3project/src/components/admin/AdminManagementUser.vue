@@ -1,7 +1,10 @@
 <template>
+    <div class="_view-user">
+        <ParticleVue32></ParticleVue32>
+        <div class="_view-user-min" >
+            <div class="_content">
     <div>
-        <div class="d-flex justify-content-between">
-            <!-- Button trigger modal -->
+        <!-- <div class="d-flex justify-content-between">
             <div>
                 <router-link to="/admin"> Dashboard Admin </router-link><i class="fa-solid fa-angles-right"></i>
                 <router-link :to="{ name: 'AdminManagementUser' }"> Management User</router-link>
@@ -11,8 +14,12 @@
                     <i class="fa-solid fa-user-plus"></i>
                 </button>
             </div>
+        </div> -->
+        <div class="row" >
+            <div class="col-12">
+                <div style="margin-bottom: 20px;color:gray"><i class="fa-solid fa-users"></i> MANAGEMENT USER</div>
+            </div>
         </div>
-        <br>
         <div >
             <table class="table table-hover table-bordered">
                 <thead class="thead-dark">
@@ -23,8 +30,8 @@
                         <th scope="col" ><i class="fa-solid fa-envelope"></i> Email</th>
                         <th scope="col" ><i class="fa-solid fa-at"></i> Full Name</th>
                         <th scope="col" ><i class="fa-solid fa-phone"></i> Phone</th>
-                        <th scope="col" ><i class="fa-solid fa-layer-group"></i> Vector</th>
-                        <th scope="col" ><i class="fa-solid fa-layer-group"></i> Image</th>
+                        <!-- <th scope="col" ><i class="fa-solid fa-layer-group"></i> Vector</th> -->
+                        <!-- <th scope="col" ><i class="fa-solid fa-layer-group"></i> Image</th> -->
                         <th scope="col" ><i class="fa-regular fa-calendar-plus"></i> Create At</th>
                         <th scope="col" ><i class="fa-solid fa-calendar-plus"></i> Update At</th>
                         <!-- <th></th> -->
@@ -33,25 +40,30 @@
                 </thead>
                 <tbody v-for="(user,index) in users" :key="index">
                     <tr>
-                        <th scope="row">{{ (pageN-1)*5+index+1 }}</th>
+                        <th scope="row">{{ (pageN-1)*6+index+1 }}</th>
                         <td>{{ user.id.length > 20 ? user.id.slice(0, 20) + '...' : user.id }}</td>
                         <td>{{ user.email.length > 30 ? user.email.slice(0, 30) + '...' : user.email }}</td>
                         <td>{{ user.fullname }}</td>
                         <td>{{ user.phone }}</td>
-                        <td>{{ user.vector }}</td>
-                        <td>{{ user.url_img }}</td>
-                        <td>{{ formatDate(user.create_at.toDate()) }}</td>
-                        <td>{{ formatDate(user.update_at.toDate()) }}</td>
+                        <!-- <td>{{ user.vector }}</td> -->
+                        <!-- <td>{{ user.url_video }}</td> -->
+                        <td>{{ processDate(user.create_at) }}</td>
+                        <td>{{ processDate(user.update_at) }}</td>
                         <!-- <td>{{ user.update_time != null ? user.update_time.slice(0, 26) : user.update_time }}</td> -->
                         <!-- <td style=""><button type="button" class="btn btn-outline-primary" @click="editRole(ad.id,ad.role)">Save</button></td> -->
                         <td style=""><button type="button" class="btn btn-outline-danger" @click="openModel(user.id)" data-toggle="modal" data-target="#exampleModalDelete">Delete</button></td>
                     </tr>
                 </tbody>
             </table>
-
-            <div id="divpaginate">
+            <div>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    <i class="fa-solid fa-user-plus"></i>
+                </button>
+            </div>
+            <br>
+            <div id="divpaginate2">
                 <paginate class="pag" id="nvm"
-                    :page-count="Math.ceil(this.quantity/5)"
+                    :page-count="Math.ceil(this.quantity/6)"
                     :page-range="3"
                     :margin-pages="2"
                     :click-handler="clickCallback"
@@ -61,11 +73,12 @@
                     :container-class="'pagination'"
                     :page-class="'page-item'">
                 </paginate>
+
             </div>
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div style="background-color: #3d3d3d99;" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -100,7 +113,7 @@
             </div>
         </div>
         <!-- Model Delete Admin -->
-        <div class="modal fade" id="exampleModalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div style="background-color: #3d3d3d99;" class="modal fade" id="exampleModalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -124,8 +137,11 @@
         </div>
         <!-- Model Delete Admin -->
         <!-- {{ number1 }} -->
-        <Notification></Notification>
+        <!-- <Notification></Notification> -->
 
+    </div>
+    </div>
+    </div>
     </div>
 </template>
 
@@ -140,27 +156,30 @@ import bcrypt from 'bcryptjs';
 
 import useEventBus from '../../composables/useEventBus'
 import Paginate from 'vuejs-paginate-next';
-import Notification from './Notification'
+// import Notification from './Notification'
+import BaseRequest from '../../restful/user/core/BaseRequest'
+
 
 export default {
 
     name: "AdminManagementUser",
     components: {
-        Notification,
+        // Notification,
         paginate: Paginate,
     },
     data(){
         return {
             user:{
                 email:'',
-                password:''
+                password:'',
+                role:"user"
             },
             uid:null,
             number1:0,
             users:[],
             quantity:null,
             pageN:1,
-            pageSize:5,
+            pageSize:6,
             idDelete:null
         }
     },
@@ -168,7 +187,18 @@ export default {
         // setInterval(() => {
         //     this.number1++;
         // }, 1000);
-        this.getUsers(1);
+        BaseRequest.get('user-list/?page=1')
+            .then( data => {
+            this.users = data.results;
+            this.quantity = data.count;
+            const { emitEvent } = useEventBus();
+            emitEvent('eventSuccess','Get All User Success !');
+        })
+        .catch( () => {
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Get All User Fail !');
+        })
+
     },
     methods: {
         formatDate(date) {
@@ -179,6 +209,16 @@ export default {
             const minutes = String(date.getMinutes()).padStart(2, '0');
             const seconds = String(date.getSeconds()).padStart(2, '0');
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        },
+        processDate(dateString){
+            const date = new Date(dateString);
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return(`${day}/${month}/${year} ${hours}:${minutes}:${seconds}`);
         },
         // register(){ // Không thêm tài khoản vào Authentication nữa 
             // createUserWithEmailAndPassword(getAuth(),this.user.email,this.user.password)
@@ -196,57 +236,34 @@ export default {
             // })
         // },
         register() {
-            fireStoreCore.collection("users").where("email", "==", this.user.email).get()
-            .then(async (querySnapshot) => { // lưu ý để async ở đây để sử dụng await ở dưới
-                if (querySnapshot.size > 0) {
-                    const { emitEvent } = useEventBus();
-                    emitEvent('eventError', 'Email already exists!');
-                } else {
-                    let id_user = fireStoreCore.collection("admins").doc().id;
-                    let createdAt = firebase.firestore.FieldValue.serverTimestamp();
-    
-                    const salt = await bcrypt.genSalt(10);
-                    const hashedPassword = await bcrypt.hash(this.user.password, salt); // sử dụng await để đợi quá trình hash password
-    
-                    fireStoreCore.collection("users").doc(id_user).set({
-                        fullname: "",
-                        phone: "", 
-                        vector: "",
-                        email: this.user.email,
-                        img_url:'',
-                        password: hashedPassword,
-                        create_at: createdAt,
-                        update_at: createdAt,
-                    }).then(() => {
-                        this.getUsers(this.pageN);
-                        var closeAdd = window.document.getElementById('closeAdd');
-                        closeAdd.click();
-                        const { emitEvent } = useEventBus();
-                        emitEvent('eventSuccess','Account successfully created !');
-                    }).catch(() => {
-                        const { emitEvent } = useEventBus();
-                        emitEvent('eventError','Add Fail !');
-                    });
-                }
-            })
-            .catch(() => {
+            BaseRequest.post('users/',this.user)
+            .then( () => {
+                this.getUsers(this.pageN);
                 const { emitEvent } = useEventBus();
-                emitEvent('eventError', 'An error occurred while checking email existence!');
-            });
+                emitEvent('eventSuccess','Add User Success !');
+                this.user = {
+                    email:'',
+                    password:'',
+                    role:"user"
+                };
+            })
+            .catch( () => {
+                const { emitEvent } = useEventBus();
+                emitEvent('eventError','Add User Fail !');
+            })
         },
         getUsers(n) {
-            this.users = [];
-            fireStoreCore.collection("users").orderBy("create_at", "desc").get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    this.users.push(doc.data());
-                    let l = this.users.length;
-                    this.users[l-1].id = doc.id;
-                });
-                this.quantity = querySnapshot.size;
-                if(n*5 > this.quantity) this.users = this.users.slice((n-1)*5);
-                else this.users = this.users.slice((n-1)*5,n*5);
-            });
+            BaseRequest.get('user-list/?page='+n)
+                .then( data => {
+                this.users = data.results;
+                this.quantity = data.count;
+                const { emitEvent } = useEventBus();
+                emitEvent('eventSuccess','Get All User Success !');
+            })
+            .catch( () => {
+                const { emitEvent } = useEventBus();
+                emitEvent('eventError','Get All User Fail !');
+            })
         },
         clickCallback:function(pageNum){
             this.pageN = pageNum;
@@ -256,25 +273,18 @@ export default {
             this.idDelete = id;
         },
         deleteUserInCollection(){
-            // this.deleteAdminInAuthentication();
-            const usersRef = fireStoreCore.collection('users')
-            const docRef = usersRef.doc(this.idDelete)
-            docRef.delete()
-            .then(() => {
-                var btnClose2 = window.document.getElementById('btnClose2');
-                btnClose2.click();
+            BaseRequest.delete('users/'+this.idDelete+'/')
+            .then( () => {
+                var close_btn = window.document.getElementById('btnClose2');
+                close_btn.click();
                 const { emitEvent } = useEventBus();
-                emitEvent('eventSuccess','Account successfully created !');
-
-                if(this.users.length == 1) {
-                    this.getUsers(1);
-                    this.pageN--;
-                }
-                else this.getUsers(this.pageN);
+                emitEvent('eventSuccess','Delete User Success !');
+                // tải lại resource mới mà không cần phải reload lại trang 
+                this.getUsers(this.pageN);
             })
-            .catch((error) => {
+            .catch( () => {
                 const { emitEvent } = useEventBus();
-                emitEvent('eventError','An error occurred while deleting the account: ' + error.code);
+                emitEvent('eventError','Delete User Fail !');
             })
         },
         // deleteAdminInAuthentication(){ // Với Authentication Chỉ có thể xóa tài khoản hiện tại của bản thân 
@@ -293,5 +303,8 @@ export default {
 }
 </script>
 <style scoped>
-
+#divpaginate {
+    position: absolute;
+    bottom: 10%;
+}
 </style>

@@ -58,6 +58,7 @@
     "vue-disable-autocomplete": "^0.0.4",
     "vue-html-to-paper": "^1.4.4",
     "vue-router": "^4.1.3",
+    "vue-video-player": "^6.0.0",
     "vue3-google-oauth2": "^1.0.6",
     "vue3-print-nb": "^0.1.4",
     "vue3-quill": "^0.2.6",

@@ -1,12 +1,16 @@
 <template>
-    <div >
-        <div>
-            <router-link :to="{ name: 'AdminAccount' }"> My Account </router-link><i class="fa-solid fa-angles-right"></i>
-            <router-link :to="{ name: 'AdminProfile' }"> Admin Profile </router-link>
-        </div>
-        <br>
-        <hr>
-        <form class="col-6 mt-6 mb-6" @submit.prevent="save()">
+    <div class="_view-user">
+        <ParticleVue32></ParticleVue32>
+        <div class="_view-user-min" >
+            <div class="_content">
+                <!-- <h1 class="text-center" style="font-size: 26px;font-weight: bold;color: #0085FF;"><i class="fa-solid fa-address-card"></i> Update Profile</h1> -->
+                <br>
+        <form style="border-radius: 10px;background-color: white;" class="p-4 col-10 mx-auto" @submit.prevent="save()">
+            <div class="row" >
+                    <div class="col-12">
+                        <div style="margin-top: 30px;margin-bottom: 20px;color:gray"><i class="fa-solid fa-address-card"></i> UPDATE PROFILE</div>
+                    </div>
+                </div>
             <div class="form-group row">
                 <label for="staticEmail" class="col-sm-2 col-form-label"><i class="fa-solid fa-at"></i> Full Name</label>
                 <div class="col-sm-10">
@@ -16,7 +20,7 @@
             <div class="form-group row">
                 <label for="staticEmail" class="col-sm-2 col-form-label"><i class="fa-solid fa-envelope"></i> Email</label>
                 <div class="col-sm-10">
-                    <input type="email" v-model="admin.email" required class="form-control-plaintext" placeholder="email@example.com">
+                    <input type="email" disabled v-model="admin.email" required class="form-control-plaintext" placeholder="email@example.com">
                 </div>
             </div>
             <div class="form-group row">
@@ -28,21 +32,24 @@
             <div class="form-group row">
                 <label for="inputPassword" class="col-sm-2 col-form-label"><i class="fa-solid fa-calendar-plus"></i> Create At</label>
                 <div class="col-sm-10">
-                    <input :value="convertTimestampToDatetime(admin.create_at)" type="text" disabled required class="form-control" >
+                    <input v-model="admin.create_at" type="text" disabled required class="form-control-plaintext" >
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputPassword" class="col-sm-2 col-form-label"><i class="fa-solid fa-calendar-check"></i> Update At</label>
                 <div class="col-sm-10">
-                    <input :value="convertTimestampToDatetime(admin.update_at)" type="text" disabled required class="form-control" >
+                    <input v-model="admin.update_at" type="text" disabled required class="form-control-plaintext" >
                 </div>
             </div>
-            <button type="submit" class="btn btn-outline-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            <button type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-floppy-disk"></i> Save </button>
+            <!-- <button type="submit" class="btn btn-outline-success"><i class="fa-solid fa-floppy-disk"></i> Save</button> -->
         </form>
-        <hr>
+        <!-- <hr> -->
         <br>
-        <button @click="logout" type="button" class="btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-        <Notification></Notification>
+        <!-- <button @click="logout" type="button" class="btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button> -->
+        <!-- <Notification></Notification> -->
+    </div>
+    </div>
     </div>
 </template>
 
@@ -50,25 +57,28 @@
 import { fireStoreCore } from './../../../configs/firebase';
 import firebase from 'firebase/compat/app';
 import useEventBus from '../../../composables/useEventBus'
-import Notification from './../Notification'
+// import Notification from './../Notification'
+import ParticleVue32 from "../../particle/ParticleVue32.vue";
+import BaseRequest from '../../../restful/user/core/BaseRequest';
 
 export default {
     name: "AdminProfile",
     components: {
-        Notification
+        // Notification
+        ParticleVue32
     },
     data(){
         return{
             admin:{
-                id:'',
-                fullname:'',
-                email:'',
-                phone:'',
-                img_url:'',
-                vector:'',
-                password:'',
-                create_at:'',
-                update_at:'',
+                id:null,
+                email:null,
+                role:null,
+                password:null,
+                fullname:null,
+                url_video:null,
+                phone:null,
+                create_at:null,
+                update_at:null,
             }
         }
     },
@@ -81,61 +91,35 @@ export default {
             return date.toLocaleString();
         },
         save() {
-
-            var sys_admin = JSON.parse(window.localStorage.getItem('admin'));
-            let UpdateAt = firebase.firestore.FieldValue.serverTimestamp();
-            let email = this.admin.email;
-            // Kiểm tra email đã được sử dụng chưa
-            fireStoreCore.collection('admins').where('email', '==', email).get()
-                .then((querySnapshot) => {
-                    if (querySnapshot.empty || (querySnapshot.size==1 && email == sys_admin.email)) { 
-                        // Cập nhật thông tin người dùng
-                        fireStoreCore.collection('admins').doc(this.admin.id)
-                            .update({
-                                fullname: this.admin.fullname,
-                                email: email,
-                                phone: this.admin.phone,
-                                update_at: UpdateAt,
-                            })
-                            .then(() => {
-                                this.getNewAdmin();
-                                const { emitEvent } = useEventBus();
-                                emitEvent('eventSuccess','Admin information updated successfully !');
-                            })
-                            .catch((error) => {
-                                const { emitEvent } = useEventBus();
-                                emitEvent('eventError','Error while updating Admin information : '+error);
-                            });
-                    } else {
-                        const { emitEvent } = useEventBus();
-                        emitEvent('eventError','Email already in use !');
-                    }
-                })
-                .catch((error) => {
-                    const { emitEvent } = useEventBus();
-                    emitEvent('eventError','Error when checking email : '+error);
-                })
-        },
-        getNewAdmin(){
-            fireStoreCore.collection('admins').doc(this.admin.id)
-            .get()
-            .then(doc => {
-                if (doc.exists) {
-                    this.admin = doc.data();
-                    this.admin.id = doc.id;
-                    window.localStorage.setItem('admin', JSON.stringify(this.admin));
-                } 
+            BaseRequest.patch('users/'+this.admin.id+'/',this.admin)
+            .then( (data) =>{
+                this.admin = data;
+                const { emitEvent } = useEventBus();
+                emitEvent('eventSuccess','Edit Information Success !');
+                window.localStorage.setItem('admin',JSON.stringify(this.admin));
+                setTimeout(()=>{
+                    window.location=window.location.href;
+                }, 1500);
+            }) 
+            .catch(()=>{
+                const { emitEvent } = useEventBus();
+                emitEvent('eventError','Edit Information Fail !');
             })
-            .catch({});
-            window.localStorage.setItem('admin',JSON.stringify(this.admin));
         },
-        logout(){
-            window.localStorage.removeItem('admin');
-            this.$router.push({name:'AdminLogin'}); 
-        }
     }
 }
 </script>
 <style scoped>
-
+form {
+    width: 100%;
+    background-color: #000;
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgb(204, 219, 232) -3px -3px 6px 1px inset;
+    padding: 10px 40px;
+    padding-bottom: 20px;
+    border-radius: 10px;
+    position: relative;
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.545);
+    font-weight: bold;
+}
 </style>

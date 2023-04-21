@@ -1,133 +1,223 @@
 <template>
-    <div >
-        <div>
-            <router-link :to="{ name: 'AdminAccount' }"> My Account </router-link><i class="fa-solid fa-angles-right"></i>
-            <router-link :to="{ name: 'AdminChangePassword' }"> Change Password </router-link>
+    <div id="profile" >
+        <ParticleVue32></ParticleVue32>
+        <div id="details" class="col-12" style="background-color: white;">
+            <form class="col-12 p-0" @submit.prevent="changeforpw" style="background-color: white;">
+                <div class="row" >
+                    <div class="col-12">
+                        <div style="margin-top: 30px;margin-bottom: 20px;color:gray"><i class="fa-solid fa-repeat"></i> CHANGE PASSWORD</div>
+                    </div>
+                </div>
+                <div class="form-group row" v-if="status">
+                  <label  class="col-sm-5 col-form-label"><i class="fa-solid fa-key"></i> Current Password</label>
+                  <div class="col-sm-7 show-pw"> 
+                    <!-- chú ý là input có thể chỉnh padding được style="padding-right:40px"
+                    ứng dụng trong việc cho thêm cái gì đó ví dụ show hide password chẳng hạn -->
+                    <input required minlength="6" :type="typeInput" v-model="changepw.current_password" class="form-control"  placeholder="Current Password">
+                  </div>
+                </div>
+                <div class="form-group row" >
+                  <label  class="col-sm-5 col-form-label"><i class="fa-solid fa-key"></i> New Password</label>
+                  <div class="col-sm-7">
+                    <input required minlength="6" :type="typeInput" v-model="changepw.new_password"  class="form-control"  placeholder="New Password">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-5 col-form-label"><i class="fa-solid fa-key"></i> Confrim New Password</label>
+                  <div class="col-sm-7">
+                    <input required minlength="6" :type="typeInput" v-model="changepw.new_password_confirmation"  class="form-control"  placeholder="Confrim New Password">
+                  </div>
+                </div>
+                <div class="form-group row" style="display:flex;align-content:center;align-items:center;line-height: 100%;margin-bottom:0px">
+                  <div class="col-5" >
+                  </div>
+                  <div class="col-7" >
+                    <label>Show All</label> <input v-model="checked" @change="showPw" type="checkbox">
+                  </div>
+                </div>
+                <button type="submit" class="mt-4 btn-pers" id="login_button" ><i class="fa-solid fa-bolt"></i> Change</button>
+            </form>
         </div>
-        <br>
-        <hr>
-        <form class="col-6 mt-6 mb-6" @submit.prevent="change()">
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-4 col-form-label"><i class="fa-solid fa-key"></i> Current Password</label>
-                <div class="col-sm-8">
-                    <input type="password" v-model="changepw.current_password" required class="form-control" placeholder="Current Password">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-4 col-form-label"><i class="fa-solid fa-key"></i> New Password</label>
-                <div class="col-sm-8">
-                    <input type="password" v-model="changepw.new_password" required class="form-control" placeholder="New Password">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-4 col-form-label"><i class="fa-solid fa-key"></i> Confrim New Password</label>
-                <div class="col-sm-8">
-                    <input type="password" v-model="changepw.new_password_confirmation" required class="form-control" placeholder="Confrim New Password">
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-outline-success"><i class="fa-solid fa-bolt"></i> Change</button>
-        </form>
-        <hr>
-        <br>
-        <button @click="logout" type="button" class="btn btn-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
-        <Notification></Notification>
+  
+        <div id="message">
+            <!-- <Notification></Notification> -->
+        </div>
+  
     </div>
-</template>
+  </template>
+  
+  
+  <script scoped>
+  
+// import Notification from '../Notification';
+// import config from '../../config.js';
 
-<script>
+import ParticleVue32 from "../../particle/ParticleVue32.vue";
 import { fireStoreCore } from './../../../configs/firebase';
 import firebase from 'firebase/compat/app';
 import useEventBus from '../../../composables/useEventBus'
-import Notification from './../Notification'
-import bcrypt from 'bcryptjs';
+// import Notification from './../Notification'
+import BaseRequest from '../../../restful/user/core/BaseRequest';
+import VideoPlayer from 'vue-video-player';
 
-export default {
-    name: "AdminChangePassword",
+  export default {
+    name : "AdminChangePassword",
     components: {
-        Notification
+      // Notification,
+      ParticleVue32,
     },
     data(){
         return{
-            admin:{
-                id:'',
-                fullname:'',
-                email:'',
-                phone:'',
-                password:'',
-                create_at:'',
-                update_at:'',
-            },
             changepw:{
-              current_password:'',
-              new_password:'',
-              new_password_confirmation:'',
+                // id:1,
+                current_password:'',
+                new_password:'',
+                new_password_confirmation:'',
             },
+            checked:false,
+            typeInput:"password",
+            user:{
+                id:null,
+                email:null,
+                role:null,
+                password:null,
+                fullname:null,
+                url_video:null,
+                phone:null,
+                create_at:null,
+                update_at:null,
+            },
+            url_img:'',
+            status:true,
         }
+    },
+    setup(){
+      document.title = "Blog App - Change Password";
+    },
+    created(){
+        // document.title = "Meta Shop - Admin Profile";
+        document.title = "Blog App - Change Password";
+    },// ta sẽ có created sẽ chạy sau setup() , setup chạy trước 
+    computed(){
+  
     },
     mounted(){
-        this.admin = JSON.parse(window.localStorage.getItem('admin'));
+  
     },
-    methods: {
-        change(){
-            // Kiểm tra mật khẩu cũ
-            var current_password = this.changepw.current_password;
-            var new_password = this.changepw.new_password;
-            var new_password_confirmation = this.changepw.new_password_confirmation;
-            
-            bcrypt.compare(current_password, this.admin.password, (err, res) => {
-                if (err || !res) {
-                    // Mật khẩu cũ không đúng
-                    const { emitEvent } = useEventBus();
-                    emitEvent('eventError', 'Old password is incorrect !');
-                } else {
-                    // Mật khẩu cũ đúng, tiếp tục kiểm tra mật khẩu mới
-                    if (new_password.length < 6) {
-                        // Mật khẩu mới phải ít nhất 6 kí tự
-                        const { emitEvent } = useEventBus();
-                        emitEvent('eventError', 'New password must be at least 6 characters !');
-                    } else if (new_password !== new_password_confirmation) {
-                        // Mật khẩu nhập lại không trùng khớp
-                        const { emitEvent } = useEventBus();
-                        emitEvent('eventError', 'Re-entered password does not match !');
-                    } else {
-                        // Hash mật khẩu mới
-                        const saltRounds = 10;
-                        bcrypt.hash(new_password, saltRounds, (err, hash) => {
-                            if (err) {
-                                // Lỗi khi hash mật khẩu mới
-                                const { emitEvent } = useEventBus();
-                                emitEvent('eventError', 'Error when changing password : '+err);
-                            } else {
-                                // Cập nhật mật khẩu mới vào firebase
-                                fireStoreCore
-                                .collection('admins')
-                                .doc(this.admin.id)
-                                .update({
-                                    password: hash,
-                                    update_at: firebase.firestore.FieldValue.serverTimestamp(),
-                                })
-                                .then(() => {
-                                    const { emitEvent } = useEventBus();
-                                    emitEvent('eventSuccess', 'Your password has been updated !');
-                                })
-                                .catch((error) => {
-                                    const { emitEvent } = useEventBus();
-                                    emitEvent('eventError', 'Error when changing password : '+error);
-                                });
-                            }
-                        });
-                    }
-                }
-            })
+    methods:{
+        showPw:function(){
+          if(this.checked == false) this.typeInput = "password";
+          else this.typeInput = "text";
         },
-        logout(){
-            window.localStorage.removeItem('admin');
-            this.$router.push({name:'AdminLogin'}); 
-        }
+        changeforpw(){
+          // console.log(this.changepw);
+          if(this.changepw.new_password != this.changepw.new_password_confirmation){
+              const { emitEvent } = useEventBus();
+              emitEvent('eventError','New password does not match !');
+              return 0;
+          }
+          else {
+            var changepw2 = {
+              password : this.changepw.new_password,
+              oldpassword : this.changepw.current_password
+            }
+            console.log(changepw2);
+            BaseRequest.patch('users/3/changepassword',changepw2)
+            .then( () =>{
+                this.changepw.current_password='';
+                this.changepw.new_password='';
+                this.changepw.new_password_confirmation='';
+                this.checked = false;
+                const { emitEvent } = useEventBus();
+                emitEvent('eventSuccess','Change For Password Success !');
+            }) 
+            .catch(()=>{
+                const { emitEvent } = useEventBus();
+                emitEvent('eventError','Change For Password Fail !');
+            })
+          }
+        },
     }
-}
-</script>
-<style scoped>
-
-</style>
+  }
+  </script>
+  <style scoped>
+  *{
+    transition: all 1s ease;
+  }
+  #profile{
+    position: relative;
+    /* background-color: #F2F4F6; */
+    padding: 40px 140px;
+    padding-bottom: 30px;
+    /* height: 800px; */
+    min-width: 100%;
+  }
+  
+  /* details */
+  #details{
+    width: 100%;
+    background-color: #000;
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgb(204, 219, 232) -3px -3px 6px 1px inset;
+    padding: 10px 40px;
+    padding-bottom: 20px;
+    border-radius: 10px;
+    position: relative;
+    background-color: white;
+    background-color: rgba(255, 255, 255, 0.545);
+    font-weight: bold;
+  }
+  #profile > img {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    opacity: 0.9;
+    min-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+  }
+  #details input{
+    background-color: rgba(255, 255, 255, 0.605); 
+    color: #F84B2F;
+    font-weight: bold;
+    font-style: italic;
+  }
+  #details label {
+    color: #F84B2F;
+    font-style: italic;
+  }
+  
+  /* btn login */
+  .btn-pers {
+  position: relative;
+  left: 50%;
+  padding: 1em 2.5em;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: #F84B2F;
+  background-color: #fff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  transform: translateX(-50%);
+  }
+  
+  .btn-pers:hover {
+  background-color: #F84B2F;
+  box-shadow: 0px 15px 20px rgba(46, 138, 229, 0.4);
+  color: #fff;
+  transform: translate(-50%, -7px);
+  }
+  
+  .btn-pers:active {
+  transform: translate(-50%, -1px);
+  }
+  
+  </style>
+  
