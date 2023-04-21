@@ -34,6 +34,7 @@ import bcrypt from 'bcryptjs';
 import { fireStoreCore } from './../../configs/firebase';
 import useEventBus from '../../composables/useEventBus'
 import Notification from './Notification'
+import LoginRequest from '../../restful/user/requests/LoginRequest'
 
 export default {
     name: "UserLogin",
@@ -55,47 +56,38 @@ export default {
         }
     },
     methods: {
-        login() {
-            fireStoreCore.collection("users").where("email", "==", this.user.email).get()
-            .then(async (querySnapshot) => {
-                if (querySnapshot.size > 0) {
-                    for (const doc of querySnapshot.docs) {
-                        const user = doc.data();
-                        const hashedPassword = user.password; // hashedPassword được lấy ra từ firestore
-                        const isMatch = await bcrypt.compare(this.user.password, hashedPassword);
-                        if (isMatch) {
-                            const { emitEvent } = useEventBus();
-                            emitEvent('eventSuccess','Login successful !');
-                            var system_user = {
-                                id:doc.id,
-                                email:this.user.email,
-                                fullname:user.fullname,
-                                phone:user.phone,
-                                img_url:'',
-                                vector:user.vector,
-                                password:user.password,
-                                create_at:user.create_at,
-                                update_at:user.update_at,
-                            };
-                            window.localStorage.removeItem('user');
-                            window.localStorage.setItem('user',JSON.stringify(system_user));
-                            setTimeout(() => {
-                                this.$router.push({name:'UserProfile'}); 
-                            }, 1000);
-                        } else {
-                            const { emitEvent } = useEventBus();
-                            emitEvent('eventError','Wrong password !');
-                        }
-                    }
-                } else {
-                    const { emitEvent } = useEventBus();
-                    emitEvent('eventError', 'Email does not exist !');
-                }
+        login:function(){
+            var v = this.user;
+            LoginRequest.post('login/',this.user)
+            .then( data => {
+            this.setdata(data);
+            const { emitEvent } = useEventBus();
+            emitEvent('eventSuccess','Login Success !');
+            setTimeout(()=>{
+                this.$router.push({name:'UserProfile'}); 
+            }, 1000);
             })
-            .catch((error) => {
-                console.log(error+' Xử lý lỗi');
-            });
-        }
+            .catch( () => {
+            this.user = v; 
+            const { emitEvent } = useEventBus();
+            emitEvent('eventError','Login fail !');
+            })
+        },
+        setdata:function(data){
+            var user = {
+                id:null,
+                email:null,
+                role:null,
+                password:null,
+                fullname:null,
+                url_video:null,
+                phone:null,
+                create_at:null,
+                update_at:null,
+            }
+            user = data;
+            window.localStorage.setItem('user',JSON.stringify(user));
+        },
     },
 };
 </script>
