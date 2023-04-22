@@ -20,6 +20,7 @@
                   <label for="staticEmail" class="col-3 col-form-label pl-0 pr-0"><i class="fa-solid fa-envelope-circle-check"></i> Email </label> 
                   <input required v-model="user.email" type="email" class="form-control col-9" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                 </div>
+                <br>
                 <div class="form-group row">
                   <label for="staticEmail" class="col-3 col-form-label pl-0 pr-0"><i class="fa-solid fa-key"></i> Password  </label> 
                   <input required v-model="user.password" type="password" class="form-control col-9" id="exampleInputPassword1" placeholder="Password">
