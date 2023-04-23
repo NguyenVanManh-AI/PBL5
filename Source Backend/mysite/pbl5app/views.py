@@ -1,6 +1,9 @@
 from rest_framework import viewsets
 from .models import User
 from .serializers import UserSerializer
+import cv2
+import pbl5app.ListEncodeFromVideo as encodefunc
+
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -50,6 +53,8 @@ class AdminList(generics.ListAPIView):
 import os
 from django.conf import settings
 
+
+
 class UserUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -59,6 +64,7 @@ class UserUpdateAPIView(generics.UpdateAPIView):
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
+        path = None
         if 'url_video' in request.data:
             # Xóa video cũ
             if instance.url_video:
@@ -68,7 +74,12 @@ class UserUpdateAPIView(generics.UpdateAPIView):
                     
             # Lưu video mới
             instance.url_video = request.data['url_video']
-
-
         serializer.save()
-        return Response(serializer.data)
+        cap = cv2.VideoCapture(instance.url_video.url[1:])
+        # cap = cv2.VideoCapture('static/videos/275256075_1345597292551162_374868419468071193_n.mp4')
+        #  
+        # lấy danh sách encode từ video
+        list_encodes = encodefunc.ListEncodeFromVideo(cap)
+        # return Response(serializer.data)
+        return Response({'url':list_encodes})
+        #return Response({"url":instance.url_video.url})
