@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserPasswordUpdateSerializer
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -50,8 +50,6 @@ class AdminList(generics.ListAPIView):
 import os
 from django.conf import settings
 
-
-
 class UserUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -61,7 +59,6 @@ class UserUpdateAPIView(generics.UpdateAPIView):
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
-        path = None
         if 'url_video' in request.data:
             # Xóa video cũ
             if instance.url_video:
@@ -71,5 +68,25 @@ class UserUpdateAPIView(generics.UpdateAPIView):
                     
             # Lưu video mới
             instance.url_video = request.data['url_video']
+
+
         serializer.save()
         return Response(serializer.data)
+    
+
+class UserPasswordUpdateAPIView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPasswordUpdateSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        old_password = hash_password(request.data.get('old_password'))
+        new_password = hash_password(request.data.get('new_password'))
+        if old_password == instance.password:
+            instance.password = new_password
+            instance.save(update_fields=['password'])
+            # serializer = self.get_serializer(instance)
+            return Response({'message': 'Password Changed'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Incorrect Old Password'}, status=status.HTTP_400_BAD_REQUEST)
