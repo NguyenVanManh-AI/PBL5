@@ -90,3 +90,40 @@ class UserPasswordUpdateAPIView(generics.UpdateAPIView):
             return Response({'message': 'Password Changed'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Incorrect Old Password'}, status=status.HTTP_400_BAD_REQUEST)
+        
+import csv
+def save_encode_face(encode):
+    # Hàng mới cần thêm vào
+    new_row = encode
+
+    # Mở file CSV trong chế độ "append"
+    with open("./face_rasp_recog.csv", 'a', newline='') as file:
+        writer = csv.writer(file)
+
+        # Ghi hàng mới vào cuối file
+        writer.writerow(new_row)
+
+import base64
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import numpy as np
+
+@csrf_exempt
+def receive_encode_face(request):
+    if request.method == 'POST':
+        # Lấy dữ liệu encodeFace_bytes từ request POST
+        
+        encodeFace_str = request.POST.get('encodeFace', None)
+    
+
+        # Kiểm tra xem dữ liệu encodeFace_bytes có tồn tại hay không
+        if encodeFace_str is None:
+            return JsonResponse({'error': 'encodeFace_str == None'})
+        # Giải mã đối tượng bytes thành mảng numpy
+        encodeFace = np.fromstring(encodeFace_str[1:-1], sep=' ')
+        
+        save_encode_face(encodeFace)
+            # Do something with encode_face , 'encode_face':encode_face
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error'})
