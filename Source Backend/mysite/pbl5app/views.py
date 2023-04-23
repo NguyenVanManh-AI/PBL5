@@ -1,9 +1,6 @@
 from rest_framework import viewsets
 from .models import User
 from .serializers import UserSerializer
-import cv2
-import pbl5app.ListEncodeFromVideo as encodefunc
-
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -75,11 +72,4 @@ class UserUpdateAPIView(generics.UpdateAPIView):
             # Lưu video mới
             instance.url_video = request.data['url_video']
         serializer.save()
-        cap = cv2.VideoCapture(instance.url_video.url[1:])
-        # cap = cv2.VideoCapture('static/videos/275256075_1345597292551162_374868419468071193_n.mp4')
-        #  
-        # lấy danh sách encode từ video
-        list_encodes = encodefunc.ListEncodeFromVideo(cap)
-        # return Response(serializer.data)
-        return Response({'url':list_encodes})
-        #return Response({"url":instance.url_video.url})
+        return Response(serializer.data)
