@@ -133,7 +133,7 @@ export default {
             if(this.selectedFileVideo){
                 formData.append('url_video', this.selectedFileVideo);
             }
-            BaseRequest.patch('users/'+this.user.id+'/',formData)
+            BaseRequest.patch('users/'+this.user.id+'/update/',formData)
             .then( (data) =>{
                 this.user = data;
                 const { emitEvent } = useEventBus();

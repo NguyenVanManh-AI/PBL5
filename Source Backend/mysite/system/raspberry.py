@@ -17,16 +17,16 @@ from datetime import datetime
 import csv
 
 # hàm lưu encode
-def save_encode_face(encode):
-    # Hàng mới cần thêm vào
-    new_row = encode
+# def save_encode_face(encode):
+#     # Hàng mới cần thêm vào
+#     new_row = encode
 
-    # Mở file CSV trong chế độ "append"
-    with open("../../AnacondaFace/system/SaveDir/face_rasp_recog.csv", 'a', newline='') as file:
-        writer = csv.writer(file)
+#     # Mở file CSV trong chế độ "append"
+#     with open("../../AnacondaFace/system/SaveDir/face_rasp_recog.csv", 'a', newline='') as file:
+#         writer = csv.writer(file)
 
-        # Ghi hàng mới vào cuối file
-        writer.writerow(new_row)
+#         # Ghi hàng mới vào cuối file
+#         writer.writerow(new_row)
 
 
 # Khởi động webcam
@@ -65,9 +65,9 @@ while(True):
         # y1, x2, y2, x1 = y1*2, x2*2, y2*2, x1*2
         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 2)
         # cv2.putText(frame, name, (x2, y2), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 2)
-        save_encode_face(encodeFace)   # gui cho server
-
-    # cv2.imshow("Phuc lap trinh", frame)
+        # save_encode_face(encodeFace)   # gui cho server
+        print (encodeFace)
+        cv2.imshow("Phuc lap trinh", frame)
     if cv2.waitKey(1)==ord("q"): #độ trễ 1/1000s, nếu bấm q sẽ thoát
         break
 cap.release() #giai phong camera
