@@ -51,9 +51,34 @@ def Mahoa (images):
             list_encodes.append(encode)
     return list_encodes
 
-def ListEncodeFromVideo(cap):
+def ListEncodeVideo(cap):
     # Thời điểm của 11 khung hình bạn muốn cắt ra
-    print("da nhan duoc video")
+    # # print("##########################################################################################")
+    # # print("da nhan duoc video")
+    # # if os.path.exists(path):
+    # #     print("File video tồn tại!")
+    # # else:
+    # #     print("Đường dẫn đến file video không đúng hoặc file video không tồn tại!")
+    # # # Lấy tổng số khung hình của video
+    # # total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    # # print("tong frames:")
+    # # print(total_frames)
+    # # Lấy tần số khung hình của video
+    # fps = cap.get(cv2.CAP_PROP_FPS)
+
+    # # Đặt con trỏ đến khung hình cuối cùng
+    # cap.set(cv2.CAP_PROP_POS_FRAMES, total_frames - 1)
+
+    # # Đọc khung hình cuối cùng
+    # ret, frame = cap.read()
+
+    # # Lấy thời gian tính bằng mili giây của khung hình cuối cùng
+    # end_time_ms = cap.get(cv2.CAP_PROP_POS_MSEC)
+
+    # Tính thời gian của video
+    # duration_sec = end_time_ms / 1000
+
+    # print(f"Thời gian của video là: {duration_sec} giây")
     times = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75]
 
     # Tạo thư mục folder1 nếu nó không tồn tại
@@ -69,6 +94,7 @@ def ListEncodeFromVideo(cap):
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
         # Đọc khung hình
         ret, frame = cap.read() 
+        
         cv2.imwrite(f'folder1/frame{i}.jpg', frame)
         images.append(frame) 
 

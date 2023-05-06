@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .models import User
+from .models import User, ListEncode
 from .serializers import UserSerializer, UserPasswordUpdateSerializer
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -51,6 +51,9 @@ class AdminList(generics.ListAPIView):
 import os
 from django.conf import settings
 
+from .ListEncodeFromVideo import ListEncodeVideo
+import cv2
+
 class UserUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -59,21 +62,45 @@ class UserUpdateAPIView(generics.UpdateAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
+       
+    
 
+        update_encode= 0
         if 'url_video' in request.data:
-            # Xóa video cũ
+            update_encode= 1
             if instance.url_video:
+                # Xoa encode cu
+                ListEncode.objects.filter(id_user=str(instance.id)).delete()
+              
+                # Xóa video cũ
+            
                 path = instance.url_video.path
                 if os.path.isfile(os.path.join(settings.MEDIA_ROOT, path)):
                     os.remove(os.path.join(settings.MEDIA_ROOT, path))
-                    
+                
+
             # Lưu video mới
             instance.url_video = request.data['url_video']
+            
 
+        serializer.save()   # NOTE: update_encode de sau dong nay thi path moi chinh xac
 
-        serializer.save()
+        if update_encode==1:
+            
+            # tao encode moi        
+            path = instance.url_video.path
+            cap = cv2.VideoCapture(path)
+            list_encodes = ListEncodeVideo(cap)
+            for vector in list_encodes:
+                new_encode = ListEncode(encode=str(vector), id_user=instance.id)
+                new_encode.save()     
+            
         return Response(serializer.data)
-    
+
+
+
+
+
 
 class UserPasswordUpdateAPIView(generics.UpdateAPIView):
     queryset = User.objects.all()
