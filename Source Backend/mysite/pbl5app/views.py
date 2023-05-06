@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
+import face_recognition
 
 class LoginView(APIView):
     def post(self, request):
@@ -127,3 +128,29 @@ def receive_encode_face(request):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error'})
+
+import io
+import face_recognition
+
+def Encode(framS):
+    return face_recognition.face_encodings(framS)
+
+@csrf_exempt
+def receive_image(request):
+    if request.method == 'POST':
+        if 'image' in request.FILES:
+            image_file = request.FILES['image']
+            # Chuyển đổi image_file thành framS
+            image_bytes = io.BytesIO(image_file.read())
+            framS = face_recognition.load_image_file(image_bytes)
+            # Tính toán face encodings
+            list_encode = Encode(framS)
+            # lấy danh sách encode
+            # nhận diện list_encode thành id tương ứng
+            # thêm id vào danh sách điểm danh
+
+            return JsonResponse({'message': 'Success', 'list_encode': str(list_encode)})
+        else:
+            return JsonResponse({'message': 'No image found in request'}, status=400)
+    else:
+        return JsonResponse({'message': 'Invalid request method'}, status=405)
