@@ -1,4 +1,4 @@
-from .models import User
+from .models import User, Encode
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,3 +13,9 @@ class UserPasswordUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('old_password', 'new_password')
+
+class EncodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Encode
+        fields = ['id', 'id_user', 'encode_user']
+    
