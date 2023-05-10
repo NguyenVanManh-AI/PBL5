@@ -75,7 +75,7 @@ while(True):
         encodeFace_str = str(encodeFace)
         data = {'encodeFace': encodeFace_str}
         response = requests.post(url, data=data)
-        save_encode_face(encodeFace)   # gui cho server
+        # save_encode_face(encodeFace)   # gui cho server
         # time.sleep(1)
         
     # cv2.imshow("Phuc lap trinh", frame)

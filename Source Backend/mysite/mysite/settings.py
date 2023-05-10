@@ -58,16 +58,18 @@ ALLOWED_HOSTS = ["*"]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = [
-    'http://google.com',
-    'http://hostname.example.com',
-    'http://localhost:8000',
-    'http://localhost:8080',
-    'http://127.0.0.1:9000',
-    'https://pbl-5.vercel.app',
-    'https://pbl5.vercel.app',
-    'https://blog-django-app.vercel.app',
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://google.com',
+#     'http://hostname.example.com',
+#     'http://localhost:8000',
+#     'http://localhost:8080',
+#     'http://127.0.0.1:9000',
+#     'https://pbl-5.vercel.app',
+#     'https://pbl5.vercel.app',
+#     'https://blog-django-app.vercel.app',
+# ]
+
+# CORS_ORIGIN_WHITELIST = ('*') # Không để gì thì cho mọi web và mọi thiết bị call đến api này 
 
 CORS_ALLOW_METHODS = [
     'GET',
