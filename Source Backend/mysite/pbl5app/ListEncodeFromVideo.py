@@ -79,7 +79,7 @@ def ListEncodeVideo(cap):
     # duration_sec = end_time_ms / 1000
 
     # print(f"Thời gian của video là: {duration_sec} giây")
-    times = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75]
+    times = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]
 
     # Tạo thư mục folder1 nếu nó không tồn tại
     if not os.path.exists('folder1'):
