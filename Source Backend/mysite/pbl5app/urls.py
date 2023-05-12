@@ -2,6 +2,8 @@ from django.urls import include, path
 from rest_framework import routers
 from .views import UserViewSet, LoginView, UserList, AdminList, UserUpdateAPIView, UserPasswordUpdateAPIView, receive_image
 from .views import AttendanceByMonthAPIView
+from .views import attendance_count
+from .views import attendance_count_by_month
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -16,5 +18,6 @@ urlpatterns = [
     # path('receive_encode_face/', receive_encode_face, name='receive_encode_face'),
     path('receive_image/', receive_image, name='receive_imgae'),
     path('attendance/<int:user_id>/<int:year>/<int:month>/', AttendanceByMonthAPIView.as_view(), name='attendance-by-month'),
-
+    path('week-absentee/', attendance_count, name='attendance_count'),
+    path('year-absentee/', attendance_count_by_month, name='attendance_count_by_month'),
 ]

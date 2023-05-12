@@ -267,3 +267,69 @@ class AttendanceByMonthAPIView(generics.ListAPIView):
                 filtered_queryset.append(attendance)
 
         return filtered_queryset
+
+
+
+
+from django.http import JsonResponse
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+from .models import Attendance
+
+def attendance_count(request):
+    # Tìm ngày đầu tiên của tuần (thứ 2)
+    today = timezone.now().date()
+    start_of_week = today - timedelta(days=today.weekday())
+
+    # Tạo một danh sách để lưu số người điểm danh từ thứ 2 đến chủ nhật
+    attendance_count = []
+
+    # Lặp qua từng ngày trong tuần từ thứ 2 đến chủ nhật
+    for i in range(7):
+        # Tính toán ngày của từng ngày trong tuần
+        date = start_of_week + timedelta(days=i)
+
+        # Lấy số người điểm danh cho ngày hiện tại
+        count = Attendance.objects.filter(date_time__date=date).values('id_user').annotate(count=Count('id_user')).count()
+
+        # Thêm số người điểm danh vào danh sách
+        attendance_count.append(count)
+
+    maxUser = User.objects.all().count()
+    for i in range(7):
+        attendance_count[i]= maxUser - attendance_count[i]
+    # Trả về kết quả dưới dạng JSON
+    return JsonResponse(attendance_count, safe=False)
+
+
+
+from django.db.models import Count
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Attendance
+from django.db.models.functions import Extract
+
+import calendar
+
+@csrf_exempt
+def attendance_count_by_month(request):
+    
+    year = datetime.datetime.now().year
+    maxUser = User.objects.all().count()
+    attendance_count = []
+
+    for month in range(1, 13):
+        # Lấy số ngày trong tháng
+        num_days = calendar.monthrange(year, month)[1]
+
+        # Lặp qua từng ngày trong tháng
+        sum = 0
+        for day in range(1, num_days + 1):
+            date = datetime.date(year, month, day)
+            count = Attendance.objects.filter(date_time__date=date).values('id_user').annotate(count=Count('id_user')).count()
+            sum += count
+        attendance_count.append(maxUser*num_days - sum)
+
+    # Trả về dữ liệu dưới dạng JSON
+    return JsonResponse(attendance_count, safe=False)
