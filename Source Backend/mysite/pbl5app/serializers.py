@@ -1,4 +1,4 @@
-from .models import User, Encode
+from .models import User, Encode, Attendance
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
@@ -18,4 +18,10 @@ class EncodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Encode
         fields = ['id', 'id_user', 'encode_user']
-    
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(source='date_time', format='%Y-%m-%d')
+
+    class Meta:
+        model = Attendance
+        fields = ('id', 'id_user', 'date')

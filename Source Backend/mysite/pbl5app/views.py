@@ -235,3 +235,35 @@ def receive_image(request):
             return JsonResponse({'message': 'No image found in request'}, status=400)
     else:
         return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+
+from rest_framework import generics
+from .models import Attendance
+from .serializers import AttendanceSerializer
+
+class AttendanceByMonthAPIView(generics.ListAPIView):
+    serializer_class = AttendanceSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']  # Lấy id người dùng từ URL
+        month = self.kwargs['month']  # Lấy tháng từ URL
+        year = self.kwargs['year']  # Lấy năm từ URL
+
+        # Lấy điểm danh theo người dùng, tháng và năm
+        queryset = Attendance.objects.filter(
+            id_user=user_id,
+            date_time__month=month,
+            date_time__year=year
+        ).order_by('date_time')
+
+        # Chỉ lấy điểm danh sớm nhất của mỗi ngày
+        attendance_dates = set()
+        filtered_queryset = []
+        for attendance in queryset:
+            date = attendance.date_time.date()
+            if date not in attendance_dates:
+                attendance_dates.add(date)
+                attendance.date_time = date
+                filtered_queryset.append(attendance)
+
+        return filtered_queryset
