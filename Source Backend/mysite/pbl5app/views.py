@@ -290,7 +290,7 @@ def attendance_count(request):
         date = start_of_week + timedelta(days=i)
 
         # Lấy số người điểm danh cho ngày hiện tại
-        if date <= today:
+        if (datetime.date(2023, 5, 10) <= date) and (date <= datetime.datetime.now().date()):
             count = Attendance.objects.filter(date_time__date=date).values('id_user').annotate(count=Count('id_user')).count()
         else:
             count = maxUser
@@ -328,7 +328,7 @@ def attendance_count_by_month(request):
         for day in range(1, num_days + 1):
             date = datetime.date(year, month, day)
             
-            if (date <= datetime.datetime.now().date()):
+            if (datetime.date(2023, 5, 10) <= date) and (date <= datetime.datetime.now().date()):
                 count = Attendance.objects.filter(date_time__date=date).values('id_user').annotate(count=Count('id_user')).count()
             else:
                 count = maxUser
@@ -356,7 +356,8 @@ def attendance_year(request):
             start_time = datetime.datetime.combine(today, time(hour=1)) #1 am UTC = 8 gio sang Viet Nam (1+7=8) 
 
 
-            if (today <= datetime.datetime.now().date()):   
+            if (datetime.date(2023, 5, 10) <= today) and (today <= datetime.datetime.now().date()):   
+           
                 on_time_count = Attendance.objects.filter(date_time__date=today, date_time__lt=start_time).values('id_user').annotate(count=Count('id_user')).count()
                 late_count = Attendance.objects.filter(date_time__date=today, date_time__gte=start_time).values('id_user').annotate(count=Count('id_user')).count()
                 absent_count = maxUser - (on_time_count + late_count)
@@ -392,7 +393,7 @@ def attendance_month(request):
         today = datetime.date(year, month, day)
         start_time = datetime.datetime.combine(today, time(hour=1)) #1 am UTC = 8 gio sang Viet Nam (1+7=8) 
 
-        if (today <= datetime.datetime.now().date()):   
+        if (datetime.date(2023, 5, 10) <= today) and (today <= datetime.datetime.now().date()):   
             on_time_count = Attendance.objects.filter(date_time__date=today, date_time__lt=start_time).values('id_user').annotate(count=Count('id_user')).count()
             late_count = Attendance.objects.filter(date_time__date=today, date_time__gte=start_time).values('id_user').annotate(count=Count('id_user')).count()
             absent_count = maxUser - (on_time_count + late_count)
