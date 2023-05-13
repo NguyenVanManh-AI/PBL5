@@ -172,8 +172,6 @@ def EncodeFrame(framS):
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .tests import show
-
 import numpy as np
 import datetime
 import re
@@ -308,7 +306,6 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Attendance
-from django.db.models.functions import Extract
 
 import calendar
 
@@ -333,3 +330,89 @@ def attendance_count_by_month(request):
 
     # Trả về dữ liệu dưới dạng JSON
     return JsonResponse(attendance_count, safe=False)
+
+
+from datetime import date, time
+def attendance_year(request):
+    maxUser = User.objects.all().count()
+    year = datetime.datetime.now().year
+    
+    dung_gio = 0
+    vang_mat = 0
+    tre_gio = 0
+
+    for month in range(1, 13):
+        num_days = calendar.monthrange(year, month)[1]
+        for day in range(1, num_days+1):
+            
+            today = datetime.date(year, month, day)
+            start_time = datetime.datetime.combine(today, time(hour=1)) #1 am UTC = 8 gio sang Viet Nam (1+7=8) 
+        
+            on_time_count = Attendance.objects.filter(date_time__date=today, date_time__lt=start_time).values('id_user').annotate(count=Count('id_user')).count()
+            late_count = Attendance.objects.filter(date_time__date=today, date_time__gte=start_time).values('id_user').annotate(count=Count('id_user')).count()
+            absent_count = maxUser - (on_time_count + late_count)
+
+            dung_gio += on_time_count
+            vang_mat += absent_count
+            tre_gio += late_count
+
+    
+    data = {
+        'dung_gio': dung_gio,
+        'vang_mat': vang_mat,
+        'tre_gio': tre_gio,
+    }
+    return JsonResponse(data)
+
+def attendance_month(request):
+    maxUser = User.objects.all().count()
+        
+    year = datetime.datetime.now().year
+    month = datetime.datetime.now().month
+    num_days = calendar.monthrange(year, month)[1]
+
+    dung_gio = 0
+    vang_mat = 0
+    tre_gio = 0
+    for day in range(1, num_days+1):
+        today = datetime.date(year, month, day)
+        start_time = datetime.datetime.combine(today, time(hour=1)) #1 am UTC = 8 gio sang Viet Nam (1+7=8) 
+    
+        on_time_count = Attendance.objects.filter(date_time__date=today, date_time__lt=start_time).values('id_user').annotate(count=Count('id_user')).count()
+        late_count = Attendance.objects.filter(date_time__date=today, date_time__gte=start_time).values('id_user').annotate(count=Count('id_user')).count()
+        absent_count = maxUser - (on_time_count + late_count)
+
+        dung_gio += on_time_count
+        vang_mat += absent_count
+        tre_gio += late_count
+
+    
+    data = {
+        'dung_gio': dung_gio,
+        'vang_mat': vang_mat,
+        'tre_gio': tre_gio,
+    }
+    return JsonResponse(data)
+
+def attendance_day(request):
+    today = date.today()
+
+
+    start_time = datetime.datetime.combine(today, time(hour=1)) #1 am UTC = 8 gio sang Viet Nam (1+7=8) 
+   
+    on_time_count = Attendance.objects.filter(date_time__date=today, date_time__lt=start_time).values('id_user').annotate(count=Count('id_user')).count()
+    late_count = Attendance.objects.filter(date_time__date=today, date_time__gte=start_time).values('id_user').annotate(count=Count('id_user')).count()
+    maxUser = User.objects.all().count()
+    absent_count = maxUser - (on_time_count + late_count)
+    
+    data = {
+        'dung_gio': on_time_count,
+        'vang_mat': absent_count,
+        'tre_gio': late_count,
+    }
+    return JsonResponse(data)
+
+def num_user(request):
+    maxUser = User.objects.all().count()
+    return JsonResponse({'so_nhan_vien': str(maxUser)})
+

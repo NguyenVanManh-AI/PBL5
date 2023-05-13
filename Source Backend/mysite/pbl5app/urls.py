@@ -4,6 +4,7 @@ from .views import UserViewSet, LoginView, UserList, AdminList, UserUpdateAPIVie
 from .views import AttendanceByMonthAPIView
 from .views import attendance_count
 from .views import attendance_count_by_month
+from .views import attendance_day, attendance_month, attendance_year, num_user
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -20,4 +21,8 @@ urlpatterns = [
     path('attendance/<int:user_id>/<int:year>/<int:month>/', AttendanceByMonthAPIView.as_view(), name='attendance-by-month'),
     path('week-absentee/', attendance_count, name='attendance_count'),
     path('year-absentee/', attendance_count_by_month, name='attendance_count_by_month'),
+    path('attendance-day/', attendance_day, name='attendance_day'),
+    path('attendance-month/', attendance_month, name='attendance_month'),
+    path('attendance-year/', attendance_year, name='attendance_year'),
+    path('num-user/', num_user, name='num-user'),
 ]
