@@ -57,7 +57,7 @@ class Encode(models.Model):
 class Attendance(models.Model):
     id = models.AutoField(primary_key=True)
     id_user =  models.IntegerField(null=True, blank=True)
-    date_time = models.DateTimeField(auto_now_add=True)
+    date_time = models.DateTimeField()
 
     def __str__(self):
         return str(self.id)
